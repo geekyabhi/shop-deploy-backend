@@ -66,6 +66,14 @@ const orderSchema = mongoose.Schema(
     deliveredAt:{
         type: Date,
     },
+    currency:{
+        type:String,
+        default:"INR"
+    },
+    order_id:{
+        type:String,
+        required:true
+    }
 },{
     timestamps: true,
 })
