@@ -1,5 +1,6 @@
 const express=require('express')
 const morgan =require('morgan')
+const cors=require('cors')
 require('colors')
 require('dotenv').config()
 const path=require('path')
@@ -12,6 +13,7 @@ const {notFound,errorHandler}=require('./middleware/errorMiddleware')
 const app=express()
 
 app.use(express.json())
+app.use(cors())
 connectDB()
 
 const _dirname = path.resolve()
