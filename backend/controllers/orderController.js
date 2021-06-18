@@ -1,6 +1,7 @@
 const Order =require('../models/orderModel')
 const asyncHandler=require('express-async-handler')
 const Razorpay=require('razorpay')
+const sendEmail = require('../email/email')
 
 const razorpay=new Razorpay({
     key_id:process.env.RAZORPAY_KEY_ID,
@@ -75,17 +76,20 @@ const getOrders=asyncHandler(async(req,res)=>{
 })
 
 const updateOrderToDelivered=asyncHandler(async(req,res)=>{
-    const order=await Order.findById(req.params.id)
+    const order=await Order.findById(req.params.id).populate('user','name email ')
+    // console.log(order)
     if(order){
         order.isDelivered=true,
         order.deliveredAt=Date.now()
         const updatedOrder=await order.save()
         res.json(updatedOrder)
+        sendEmail(order.user.email,`You order has been delivered at your address`,order.user.name,'Order Delivered')
     }else{
         res.status(404)
         throw new Error('Order not found')
     }
 })
+
 
 
 module.exports={addOrderItems,getOrderById,updateOrderToPaid,getMyOrders,getOrders,updateOrderToDelivered}

@@ -1,6 +1,7 @@
 const User =require('../models/userModel')
 const asyncHandler=require('express-async-handler')
 const generateToken = require('../utils/generateToken')
+const sendEmail = require('../email/email')
 
 const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
@@ -40,6 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
                 isAdmin: user.isAdmin,
                 token: generateToken(user._id),
             })
+            sendEmail(email,`You have been registered to shopp using the email id ${email}`,name,'Register done successfully')
         }else{
             res.status(400)
             throw new Error('Invalid user data')
